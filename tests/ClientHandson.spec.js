@@ -13,6 +13,7 @@ test.only('Clientsite playwright test',async ({browser})=>
     await page.locator('#login').click();
     await page.waitForLoadState('networkidle');
     await page.locator(".card-body").first().waitFor();
+    
     const titlecards = await page.locator('.card-body b').allTextContents();
     console.log(titlecards);
 
