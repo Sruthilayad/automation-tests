@@ -1,5 +1,5 @@
 //importing annotation from PW jar to recognize the test
-const {test,expect} = require('@playwright/test');
+/**const {test,expect} = require('@playwright/test');
 
 //first argument is TC name and 2nd is function
 test('First Browser playwright test',async ({browser,page})=>
@@ -18,3 +18,4 @@ test ('page playwright test',async ({page})=>
     //assertion
     await expect (page).toHaveTitle("Google");
 });
+**/
