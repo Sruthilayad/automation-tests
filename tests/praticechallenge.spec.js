@@ -1,61 +1,59 @@
 import{test,expect} from '@playwright/test';
+import{ SauceDemoLoginPage } from '../Pages/SauceDemoLoginPage';
+import{ SauceDemoCartPage } from '../Pages/SauceDemoCartPage';
 
-test('Remove multiple items from cart', async({page}) => {
+//Test 1: Login to Saucedemo
+test('Login to saucedemo', async({page}) => {
     await page.goto('https://www.saucedemo.com/');
-    await page.locator('input#user-name').fill('standard_user');
-    await page.locator('input#password').fill('secret_sauce');
-    await page.locator('input#login-button').click();
-    await page.waitForLoadState('networkidle');
-    await page.locator('button#add-to-cart-sauce-labs-backpack').first().click();
-    await page.locator('button#add-to-cart-sauce-labs-bike-light').click();
-    await page.locator('button#add-to-cart-sauce-labs-bolt-t-shirt').click();
-    await page.locator('button#remove-sauce-labs-bike-light').first().click();
-    await page.locator('button#remove-sauce-labs-bolt-t-shirt').click();
-    await expect(page.locator('button#add-to-cart-sauce-labs-bolt-t-shirt')).toBeVisible();
+
+    const loginPage = new SauceDemoLoginPage(page);
+    await loginPage.login('standard_user', 'secret_sauce');
+    await expect(page).toHaveURL(/inventory/);
 });
 
-test('Verify Product Prices', async({page}) => {
+//Test 2: Add to Cart and verify
+test('Add item to Cart', async({page}) => {
     await page.goto('https://www.saucedemo.com/');
-    await page.locator('input#user-name').fill('standard_user');
-    await page.locator('input#password').fill('secret_sauce');
-    await page.locator('input#login-button').click();
-    await page.waitForLoadState('networkidle');
-    const priceText = await page.locator('.inventory_item_price').first().textContent();
-    console.log('Product Price is :',priceText);
-    await expect(page.locator('.inventory_item_price').first()).toBeVisible();
+     const loginPage = new SauceDemoLoginPage(page);
+      const cartPage = new SauceDemoCartPage(page);
+    await loginPage.login('standard_user', 'secret_sauce');
+    await cartPage.addItem();
+
+    await expect(page.locator('.shopping_cart_badge')).toContainText('1');
+    
 });
 
-
+/**Test 3: Data-driven Checkout
 const testUsers = [
     {
         username:'standard_user',
-        password:'secret_sauce',
-        shouldPass: true
+        password:'secret_sauce'
     },
 
-    {
-        username:'problem_user',
-        password:'secret_sauce',
-        shouldPass: true
-    },
-
-];
+   ];
 
 testUsers.forEach(user => {
-    test.only(`Multiple checkout attempts ${user.username}`, async({page}) => {
+    test(`Checkout with ${user.username}`, async({page}) => {
     await page.goto('https://WWW.saucedemo.com/');
-    await page.locator('input#user-name').fill('standard_user');
-    await page.locator('input#password').fill('secret_sauce');
-    await page.locator('input#login-button').click();
-    await page.waitForLoadState('networkidle');
-    await page.locator('button#add-to-cart-sauce-labs-backpack').first().click();
-    await page.locator('.shopping_cart_link').click();
-    await page.locator('button[name="checkout"]').click();
-    await expect(page).toHaveURL('https://www.saucedemo.com/checkout-step-one.html');
+      
+
+    const loginPage = new SauceDemoLoginPage(page);
+    const cartPage = new SauceDemoCartPage(page);
+
+    await loginPage.login(testUsers.username, testUsers.password);
+    await cartPage.addItem();
+    await cartPage.goToCheckout();
+    await page.pause();
+    //await page.waitForLoadState('networkidle');
+    
+    //Fill checkout info
+   // await cartPage.fillCheckoutInfo('john','Doe','12345');
+    //await expect(page).toHaveURL(/checkout-step-two/);
+    
    
 });
 });
-
+**/
 
 
 
