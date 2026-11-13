@@ -15,7 +15,7 @@ test('select Radio button', async({page}) => {
   
 });
 
-test.only('Handle alert Pop Up', async({page}) => {
+test('Handle alert Pop Up', async({page}) => {
     await page.goto('https://practice.expandtesting.com/');
     page.on('dialog',dialog => dialog.accept());
    // await page.locator('button:has-text("Show Alert")').click();
