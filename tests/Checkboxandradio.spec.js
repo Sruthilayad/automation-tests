@@ -15,9 +15,10 @@ test('select Radio button', async({page}) => {
   
 });
 
-test('Handle alert Pop Up', async({page}) => {
-    await page.goto('https://practice.expandtesting.com/');
+test.only('JS alert success message', async({page}) => {
+    await page.goto('https://the-internet.herokuapp.com/javascript_alerts');
     page.on('dialog',dialog => dialog.accept());
-   // await page.locator('button:has-text("Show Alert")').click();
+    await page.getByRole('button',{name:'Click for JS Alert'}).click();
+    await expect(page.locator('#result')).toHaveText('You successfully clicked an alert');
   
 });
